@@ -8,8 +8,6 @@ mongoose
   .then(() => console.log("Successfully connect to MongoDB."))
   .catch(err => console.error("Connection error", err));
 
-// const mongoose = require("mongoose");
-
 const db = require("./models");
 
 const createTutorial = function (tutorial) {
@@ -65,20 +63,35 @@ const addTutorialToCategory = function(tutorialId, categoryId) {
   );
 };
 
-// const getTutorialsInCategory = function(categoryId) {
-//   return db.Tutorial.find({ category: categoryId })
-//     .populate("category", "name -_id")
-//     .select("-comments -images -__v");
-// };
-
-//This is the time to use populate() function to get full Tutorial data.
 // const getTutorialWithPopulate = function (id) {
 //   return db.Tutorial.findById(id).populate("comments");
 // };
 
-//If you don’t want to get comment._id & comment.__v in the result, just add second parameters to populate() function.
-const getTutorialWithPopulate = function(id) {
-  return db.Tutorial.findById(id).populate("comments", "-_id -__v");
+// const getTutorialWithPopulate = function(id) {
+//   return db.Tutorial.findById(id).populate("comments", "-_id -__v");
+//};
+
+// const run = async function() {
+//   var tutorial = await createTutorial({
+//     title: "Tutorial #1",
+//     author: "bezkoder"
+//   });
+
+//  var category = await createCategory({
+//     name: "Node.js",
+//     description: "Node.js tutorial"
+//   });
+
+//   tutorial = await addTutorialToCategory(tutorial._id, category._id);
+//   console.log("\n>> Tutorial:\n", tutorial);
+//   tutorial = await getTutorialWithPopulate(tutorial._id);
+//   console.log("\n>> populated Tutorial:\n", tutorial)
+// };
+
+const getTutorialsInCategory = function(categoryId) {
+  return db.Tutorial.find({ category: categoryId })
+    .populate("category", "name -_id")
+    .select("-comments -images -__v");
 };
 
 const run = async function() {
@@ -87,16 +100,22 @@ const run = async function() {
     author: "bezkoder"
   });
 
- var category = await createCategory({
+  var category = await createCategory({
     name: "Node.js",
     description: "Node.js tutorial"
   });
 
-  tutorial = await addTutorialToCategory(tutorial._id, category._id);
-  console.log("\n>> Tutorial:\n", tutorial);
-  //This is the time to use populate() function to get full Tutorial data.
-  tutorial = await getTutorialWithPopulate(tutorial._id);
-  console.log("\n>> populated Tutorial:\n", tutorial);
+  await addTutorialToCategory(tutorial._id, category._id);
+
+  var newTutorial = await createTutorial({
+    title: "Tutorial #2",
+    author: "bezkoder"
+  });
+
+  await addTutorialToCategory(newTutorial._id, category._id);
+
+  var tutorials = await getTutorialsInCategory(category._id);
+  console.log("\n>> all Tutorials in Cagetory:\n", tutorials);
 };
 
 mongoose
@@ -108,4 +127,3 @@ mongoose
   .catch(err => console.error("Connection error", err));
 
 run();
-

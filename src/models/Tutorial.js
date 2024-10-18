@@ -1,4 +1,3 @@
-//The Tutorial has only ObjectId in comments array. ref helps us get full fields of Comment when we call populate() method.
 const mongoose = require("mongoose");
 
 const Tutorial = mongoose.model(
@@ -12,7 +11,11 @@ const Tutorial = mongoose.model(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment"
       }
-    ]
+    ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category"
+    }
   })
 );
 

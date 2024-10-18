@@ -1,22 +1,11 @@
 const mongoose = require("mongoose");
 
-const Tutorial = mongoose.model(
-  "Tutorial",
+const Category = mongoose.model(
+  "Category",
   new mongoose.Schema({
-    title: String,
-    author: String,
-    images: [],
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment"
-      }
-    ],
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category"
-    }
+    name: String,
+    description: String
   })
 );
 
-module.exports = Tutorial;
+module.exports = Category;
